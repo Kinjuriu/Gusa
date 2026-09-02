@@ -1,24 +1,26 @@
 # Gusa — Decisions
 
-One line per decision. Status is OPEN until the owner writes the outcome and the date. Defaults are what we build if nobody objects by the due date.
+One line per decision. OPEN until the owner writes the outcome and date. Defaults are what gets built if nobody objects by the due date. DEFERRED means Phase 2, not the MVP.
 
-| ID | Decision | Default | Owner | Due | Status |
+| ID | Decision | Default / outcome | Owner | Due | Status |
 |---|---|---|---|---|---|
-| D-001 | **Overlay surface.** How does the user feel output and type Braille while another app (Chrome) is in front? Options: (a) native six-dot surface drawn by the accessibility service with `TYPE_ACCESSIBILITY_OVERLAY`; (b) "ping-pong": Gusa launches the app, acts, then brings its own screen back; (c) Flutter engine inside the overlay (add-to-app) — hardest. | Stage 1 = (b). Lane N runs spike W0.7 on (a). If the spike works on two phones, Stage 2 uses (a). | Lane N | End of Week 1 | OPEN |
-| D-002 | **TalkBack coexistence.** Only one accessibility service can own touch exploration, and SPEC §9 gestures are TalkBack's gestures. | Gusa gestures work only inside Gusa's own screens (and the overlay if D-001 = a). Gusa does not request touch exploration in MVP. TalkBack may stay on. Revisit after user testing. | Lane T + N | Week 0 | OPEN |
-| D-003 | **Voice provider.** | Android `SpeechRecognizer` + `TextToSpeech` only. ElevenLabs removed from MVP. Dart `SpeechProvider` interface so a cloud provider can be added later. | Ian | — | **DECIDED 2026-09-02** |
-| D-004 | **Serverless platform.** | Cloudflare Workers (spec recommendation). Supabase Edge Functions is the fallback if Workers blocks on something. | Lane C | Week 0 | OPEN |
-| D-005 | **Native bridge.** | Pigeon from day 1, not MethodChannel first. Typed contracts matter more with four machines. | Lane N | Week 0 | OPEN |
-| D-006 | **Proxy authentication.** No user accounts exist. | Shared secret header per build, rotated per release; per-key rate limit; small monthly spend cap on the OpenAI key; Play Integrity attestation in Phase 2. | Lane C | Week 0 | OPEN |
-| D-007 | **Test event page.** | Own page on GitHub Pages with proper `<label for>` markup. Real third-party pages only from Stage 3 (N3.1). | Lane C | Week 0 | OPEN |
-| D-008 | **Braille standard.** | English Grade 1, UEB uncontracted. Capital sign and number sign supported. Kiswahili in Phase 2. | Lane T | Week 0 | OPEN |
-| D-009 | **Haptic encoding of a cell.** Dot-by-dot in order 1–6 with present/absent slots, or row-by-row, or long/short pulses. | Start dot-by-dot (simplest to explain). Practice-mode data at the Stage 1 checkpoint decides. | Lane T | Stage 1 checkpoint | OPEN |
-| D-010 | **Go / pivot after Stage 1.** See TEAM-PLAN §8. | Go if ≥70 % character recognition and ≥5 wpm with three testers. | Ian | Stage 1 exit | OPEN |
-| D-011 | **App authentication (user-facing).** Does the MVP have any sign-in at all? | **None. The MVP is a demo: no password, no OTP, no login, no user account.** The app opens straight into the experience — touch/haptic Braille feedback, speech-to-text, and open-app actions. Everything stays on-device. NOT the same as D-006 (proxy shared-secret, which protects the OpenAI key) and NOT the same as SPEC §37 redaction (stripping other apps' password/OTP text before sending to AI). Cloud user accounts stay in the out-of-scope list (SPEC §46). | Ian | — | **DECIDED 2026-09-02** |
+| D-001 | **Overlay surface.** How does the user type Braille while another app is in front? | Not needed: the MVP has no screen reading, so the user is always inside Gusa. Revisit with the accessibility service. | Lane N (Phase 2) | — | DEFERRED |
+| D-002 | **TalkBack coexistence.** | Gusa is a normal app in the MVP; TalkBack users can run it. Gusa gestures apply only inside Gusa screens. Touch-exploration conflicts belong to Phase 2. | — | — | DEFERRED |
+| D-003 | **Voice provider.** | Android speech only via `speech_to_text` and `flutter_tts`. ElevenLabs removed. `VoicePort` keeps a cloud provider swappable. | Ian | — | **DECIDED 2026-09-02** |
+| D-004 | **Serverless platform.** | Only exists if D-014's flag is on. Cloudflare Workers if so. | Lane V | when D-014 flips | DEFERRED |
+| D-005 | **Native bridge.** | None. No Pigeon, no MethodChannel. Dart ports + plugins. | Ian | — | **DECIDED 2026-09-02** |
+| D-006 | **Proxy authentication.** | Follows D-004. Shared secret + spend cap if a proxy exists. | Lane V | with D-004 | DEFERRED |
+| D-007 | **Test event page.** | No forms in the MVP. | — | — | DEFERRED |
+| D-008 | **Braille standard.** | English Grade 1, UEB uncontracted, capital and number signs. Kiswahili Phase 2. | Lane T | Week 0 | OPEN |
+| D-009 | **Haptic encoding of a cell.** Dot-by-dot (six slots, present / absent), row-by-row, or long / short pulses. | Start dot-by-dot. Practice-mode data at the Stage 1 checkpoint decides. Timing table in `docs/HAPTICS.md`. | Lane T | Week 0 (W0.3) | OPEN |
+| D-010 | **Go / pivot after Stage 1.** | Go if ≥ 70 % character recognition and ≥ 5 wpm with three testers (TEAM-PLAN §7). | Ian | Stage 1 exit | OPEN |
+| D-011 | **App authentication (user-facing).** Does the MVP have any sign-in at all? | **None. The MVP is a demo: no password, no OTP, no login, no user account.** The app opens straight into the experience. Everything stays on-device. Not the same as D-006 (proxy secret) and not the same as SPEC §37 redaction. Cloud user accounts stay out of scope. | Ian | — | **DECIDED 2026-09-02** |
+| D-012 | **MVP scope.** | **Communication loop only:** speech in → Braille haptics out → tap-tap reply → speech out, plus quick replies and touch gestures. Accessibility service, screen reading, form filling, and the §43 event-registration demo move to Phase 2. App launcher is a stretch. | Ian | — | **DECIDED 2026-09-02** |
+| D-013 | **Flutter only, no Kotlin.** | Native behaviour comes from plugins: `speech_to_text` 7.4, `flutter_tts` 4.2, `vibration` 3.2, `installed_apps` 2.1, `android_intent_plus`. `android/` holds manifest and Gradle config only. If a plugin gap ever forces native code, fork the plugin in its own repo; this repo stays Dart. Known for Phase 2: `flutter_accessibility_service` 1.2 exposes the event node, not the full tree, so screen reading will need native work later. | Ian | — | **DECIDED 2026-09-02** |
+| D-014 | **AI is minimal.** | Simplifier is rule-based and offline by default. An OpenAI simplifier exists behind `GUSA_AI=on`, off in the demo, on only if someone owns a key and a proxy. | Ian | — | **DECIDED 2026-09-02** |
 
 ## Log
 
-- 2026-09-02 — D-003 decided by Ian: no ElevenLabs. Voice is Android native only.
-- 2026-09-02 — D-011 decided by Ian: MVP ships with NO user-facing auth. It is a demo —
-  no password, no OTP, no login, no account. App opens straight to touch feedback,
-  speech-to-text and open-app. Does not change D-006 (proxy secret) or §37 redaction.
+- 2026-09-02 — D-003 decided by Ian: no ElevenLabs, Android speech only.
+- 2026-09-02 — D-011 decided by Ian: no user-facing auth in the MVP; it opens straight into the experience.
+- 2026-09-02 — D-012, D-013, D-014 decided by Ian: communication-loop scope, Flutter only, minimal AI. D-001, D-002, D-004, D-006, D-007 deferred to Phase 2 as a consequence. D-005 closed: no native bridge.
