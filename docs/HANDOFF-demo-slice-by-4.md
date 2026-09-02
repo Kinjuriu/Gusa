@@ -1,7 +1,7 @@
 # HANDOFF — Gusa demo slice ("done by 4")
 
-Branch: `spec/demo-slice-by-4`   Parent: `docs/team-plan`   Status: IN PROGRESS
-Owner: Ian (orchestrated by Claude)   Updated: 2026-09-02 13:25 EAT
+Branch: `spec/demo-slice-by-4`   Parent: `docs/team-plan`   Status: IN PROGRESS — integrated, awaiting a phone
+Owner: Ian (orchestrated by Claude)   Updated: 2026-09-02 14:15 EAT
 
 ## What this spec is doing
 
@@ -23,22 +23,27 @@ plus the always-on tap/speech launcher**:
 
 ## Where it is at right now
 
-Scaffold + manifest + folder contracts are committed. Three lanes are running in
-parallel worktrees. The always-on home surface is being built in the main tree.
+**All three lanes are built, merged and integrated. 71 tests green, `flutter analyze`
+clean.** The app compiles and runs on fakes today. The ONLY thing left is plugging in a
+physical Android phone and walking Journey A on it.
 
 ## Done
 - [x] `flutter create` android-only scaffold, deps pinned — `887f201`
 - [x] Android manifest: RECORD_AUDIO, VIBRATE, INTERNET, WAKE_LOCK + `<queries>` for
       launchable apps, SpeechRecognizer and TTS engines (API 30+ package visibility)
 - [x] D-011 recorded (no user-facing auth in MVP) — on `docs/team-plan`, pushed
+- [x] Lane T braille + haptics — 16 tests — merged
+- [x] Lane V voice (SpeechProvider + Android impl + fake) — 20 tests — merged
+- [x] Lane C launcher + AI simplifier — 27 tests — merged
+- [x] Always-on home surface, Journey A controller, Braille visualiser — 8 tests
+- [x] Adapters wiring lanes to the surface (`real_ports.dart`) — `df2fce7`
 
 ## Remaining
-- [ ] Lane T — `lib/core/braille/` + `lib/core/haptics/` — worktree `gusa-wt-tactile`, branch `spec/demo-tactile`
-- [ ] Lane V — `lib/services/voice/` — worktree `gusa-wt-voice`, branch `spec/demo-voice`
-- [ ] Lane C — `lib/services/launcher/` + `lib/services/ai/` — worktree `gusa-wt-launcher`, branch `spec/demo-launcher`
-- [ ] Orchestrator — `lib/features/home/` always-on surface + integration adapters
-- [ ] Merge three lane branches → `spec/demo-slice-by-4`, wire real implementations
-- [ ] Build + install on a physical phone, run Journey A end to end
+- [ ] **Connect an Android phone and run it.** Everything else is done.
+- [ ] Tune haptic timings on-device — the constants at the top of
+      `lib/core/haptics/haptic_engine.dart` are guesses until someone feels them.
+- [ ] Optional: set `--dart-define=GUSA_AI_API_KEY=...` for real AI shortening;
+      without it the rule-based fallback runs.
 
 ## Decisions made
 - **Scope cut to Journey A + launcher** (above). Rejected: attempting the accessibility
@@ -65,13 +70,25 @@ cd "/Users/adera/My Work/projects/gusa"
 /Users/adera/flutter/bin/flutter analyze && /Users/adera/flutter/bin/flutter test
 /Users/adera/flutter/bin/flutter run           # needs a physical phone
 ```
-Last result: scaffold builds; lane tests pending.
+Last result (2026-09-02 14:15): `flutter analyze` — No issues found.
+`flutter test` — **All tests passed (71)**.
+
+Run on fakes, no device needed:
+```
+/Users/adera/flutter/bin/flutter run --dart-define=GUSA_FAKE=true
+```
 
 ## Git state
-Branch `spec/demo-slice-by-4` at `887f201`, not pushed. Three lane worktrees at the same
-base. Parent `docs/team-plan` is pushed and carries D-011.
+Branch `spec/demo-slice-by-4` at `df2fce7`, NOT pushed yet. The three lane branches
+(`spec/demo-tactile`, `spec/demo-voice`, `spec/demo-launcher`) are merged into it; their
+worktrees (`../gusa-wt-*`) can be removed with `git worktree remove`.
+Parent `docs/team-plan` is pushed and carries D-011.
 
 ## Resume instruction
-Wait for the three lane reports, merge their branches into `spec/demo-slice-by-4`,
-replace the placeholder ports in `lib/features/home/` with the real implementations,
-then `flutter run` on a connected phone and walk SPEC §5 Journey A.
+Plug in an Android phone, then:
+```
+cd "/Users/adera/My Work/projects/gusa"
+/Users/adera/flutter/bin/flutter run
+```
+Press LISTEN, speak a sentence, and confirm you feel it as Braille pulses. Then tune the
+timing constants in `lib/core/haptics/haptic_engine.dart` until the cells are readable.
