@@ -95,12 +95,14 @@ class HomeController extends ChangeNotifier {
         _set(Phase.error, msg: 'No app matches "$phrase"');
         return;
       }
-      if (found.length > 1) {
-        candidates = found;
+      // Only a certain, single match opens straight away. Anything else is
+      // offered for confirmation — never guessed.
+      if (found.needsConfirmation || found.candidates.length > 1) {
+        candidates = found.candidates;
         _set(Phase.choosing, msg: 'Which one?');
         return;
       }
-      await openApp(found.first);
+      await openApp(found.candidates.first);
     } catch (e) {
       _set(Phase.error, msg: 'Failed: $e');
     }

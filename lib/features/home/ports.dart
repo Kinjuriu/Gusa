@@ -41,9 +41,22 @@ class LaunchableApp {
   final String package;
 }
 
+/// Result of matching a spoken phrase against installed apps.
+///
+/// [needsConfirmation] is the safety-critical bit: a blind-deaf user cannot see
+/// that the wrong app opened, so anything less than a certain match must be
+/// confirmed rather than launched.
+class Resolution {
+  const Resolution(this.candidates, {required this.needsConfirmation});
+  final List<LaunchableApp> candidates;
+  final bool needsConfirmation;
+
+  static const none = Resolution([], needsConfirmation: false);
+  bool get isEmpty => candidates.isEmpty;
+}
+
 abstract class LauncherPort {
   Future<List<LaunchableApp>> installedApps();
-  /// Ranked candidates, best first. Empty when nothing matches.
-  List<LaunchableApp> resolve(String phrase, List<LaunchableApp> apps);
+  Resolution resolve(String phrase, List<LaunchableApp> apps);
   Future<void> launch(String package);
 }

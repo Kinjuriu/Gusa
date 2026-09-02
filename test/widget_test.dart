@@ -71,10 +71,24 @@ void main() {
     expect(launcher.launched, isEmpty, reason: 'must not open an app while ambiguous');
   });
 
-  test('unambiguous phrase opens the app', () async {
+  test('a partial phrase asks for confirmation instead of opening', () async {
     final launcher = FakeLauncher();
     final c = buildController(
       voice: FakeVoice(script: const ['whats']),
+      launcher: launcher,
+    );
+    await c.loadApps();
+    await c.openByVoice();
+
+    expect(c.phase, Phase.choosing);
+    expect(launcher.launched, isEmpty,
+        reason: 'a partial match must be confirmed, not guessed');
+  });
+
+  test('an exact app name opens straight away', () async {
+    final launcher = FakeLauncher();
+    final c = buildController(
+      voice: FakeVoice(script: const ['WhatsApp']),
       launcher: launcher,
     );
     await c.loadApps();

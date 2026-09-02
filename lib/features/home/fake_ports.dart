@@ -108,14 +108,18 @@ class FakeLauncher implements LauncherPort {
   Future<List<LaunchableApp>> installedApps() async => _apps;
 
   @override
-  List<LaunchableApp> resolve(String phrase, List<LaunchableApp> apps) {
+  Resolution resolve(String phrase, List<LaunchableApp> apps) {
     final q = phrase.toLowerCase().trim();
-    if (q.isEmpty) return const [];
-    final exact = apps.where((a) => a.name.toLowerCase() == q);
-    if (exact.isNotEmpty) return exact.toList();
-    return apps
-        .where((a) => a.name.toLowerCase().startsWith(q) || a.name.toLowerCase().contains(q))
+    if (q.isEmpty) return Resolution.none;
+    final exact = apps.where((a) => a.name.toLowerCase() == q).toList();
+    if (exact.isNotEmpty) {
+      return Resolution(exact, needsConfirmation: false);
+    }
+    final partial = apps
+        .where((a) =>
+            a.name.toLowerCase().startsWith(q) || a.name.toLowerCase().contains(q))
         .toList();
+    return Resolution(partial, needsConfirmation: partial.isNotEmpty);
   }
 
   @override

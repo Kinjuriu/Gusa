@@ -6,6 +6,14 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- Keeps the always-on surface alive while listening -->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!-- speech_to_text routes over a headset when one is paired -->
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+    <!-- Enumerate installed apps so a spoken name can resolve to any of them.
+         NOTE: Play Store-restricted. Fine for the demo; production needs either
+         a declared use case or a narrowed <queries> list. -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
 
     <application
         android:label="Gusa"
