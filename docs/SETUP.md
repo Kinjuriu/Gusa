@@ -18,14 +18,14 @@ Required for everyone. The emulator has no vibration motor, so the Tactile and I
 
 1. Enable Developer Options and USB debugging.
 2. `adb devices` shows the phone.
-3. Note the model and Android version in `docs/TEST-RESULTS.md` under Device matrix, plus whether `hasAmplitudeControl()` returns true.
+3. Post the model, Android version, and whether `hasAmplitudeControl()` returns true in the Week 0 issue. Ian copies them into `docs/TEST-RESULTS.md`.
 
 ## 3. Clone, build, install
 
 ```bash
 git clone https://github.com/Kinjuriu/Gusa.git gusa
 cd gusa
-git checkout develop
+git checkout develop            # wait until the Week 0 issue says develop is ready (W0.1 merged)
 flutter pub get
 flutter run --dart-define=GUSA_USE_FAKES=true     # loop runs on fakes, no permissions needed
 cp .env.example .env.json                           # GUSA_PROXY_URL and GUSA_PROXY_SECRET from Lane V
@@ -37,6 +37,7 @@ flutter run --dart-define-from-file=.env.json      # real ports: asks for microp
 | Flag | Default | Effect |
 |---|---|---|
 | `GUSA_USE_FAKES` | `false` | Every port is a fake. Braille cells print to the log, haptics log timings, voice returns canned text. |
+| `GUSA_CLOUD_VOICE` | `on` | `off` forces Android text-to-speech for every reply. |
 | `GUSA_AI` | `on` | `off` forces the rule-based shortener and generic replies. Use it for a demo with no network. `on` needs `GUSA_PROXY_URL` and `GUSA_PROXY_SECRET` in `.env.json`. |
 
 ## 5. Check everything
