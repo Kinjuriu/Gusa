@@ -1,0 +1,14 @@
+# Review routing. Lane owners per Ian, 2026-09-02.
+/docs/                          @Ianodad
+/lib/app/                       @Ianodad
+/lib/features/                  @Ianodad
+/lib/storage/                   @Ianodad
+/lib/ports/                     @Ianodad @Kinjuriu
+/lib/core/braille/              @Kinjuriu
+/lib/core/haptics/              @Kinjuriu
+/lib/core/practice/             @Kinjuriu
+/lib/core/braille_keyboard/     @Ianodad
+/lib/core/gestures/             @Ianodad
+/lib/core/quick_reply/          @Ianodad
+/lib/services/                  @future-centaur
+/proxy/                         @future-centaur
