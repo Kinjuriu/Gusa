@@ -1,6 +1,6 @@
 # SPEC I — Input lane (six-dot keyboard, gestures, quick replies)
 
-**Developer:** *assign* · **Branch:** `feat/i/I1.2-gesture-engine` (first task: it has no dependencies; then I1.1, then I1.3) · **Reviewer:** Ian
+**Developer:** Ian (@Ianodad), alongside Lane A · **Branch:** `feat/i/I1.2-gesture-engine` (first task: it has no dependencies; then I1.1, then I1.3) · **Reviewer:** Stephane (@Kinjuriu)
 **Owns:** `lib/core/braille_keyboard/`, `lib/core/gestures/`, `lib/core/quick_reply/`, `test/core/braille_keyboard/`, `test/core/gestures/`, `test/core/quick_reply/`
 **Reads:** [`TEAM-PLAN.md`](../TEAM-PLAN.md) §3–4, [`DECISIONS.md`](../DECISIONS.md) D-013, [`WIREFRAMES.md`](../WIREFRAMES.md) screens 1–5, [`SPEC.md`](../SPEC.md) §6, §9
 

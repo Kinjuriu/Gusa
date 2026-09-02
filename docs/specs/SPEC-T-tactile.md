@@ -1,6 +1,6 @@
 # SPEC T — Tactile lane (Braille engine, haptic engine, practice)
 
-**Developer:** *assign* · **Branch:** `feat/t/T1.1-braille-engine` (first task; one branch per task ID after that) · **Reviewer:** Ian
+**Developer:** Stephane (@Kinjuriu) · **Branch:** `feat/t/T1.1-braille-engine` (first task; one branch per task ID after that) · **Reviewer:** Ian
 **Owns:** `lib/core/braille/`, `lib/core/haptics/`, `lib/core/practice/`, `test/core/braille/`, `test/core/haptics/`, `test/core/practice/`
 **Reads:** [`TEAM-PLAN.md`](../TEAM-PLAN.md) §3–4, [`DECISIONS.md`](../DECISIONS.md) D-008 D-009 D-013, [`WIREFRAMES.md`](../WIREFRAMES.md) screens 2, 3, 5, [`SPEC.md`](../SPEC.md) §6–8, §41
 

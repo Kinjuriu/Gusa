@@ -20,10 +20,10 @@
 
 | Availability | Week 0 (baseline + CI) | Stage 1 · Build | Stage 2 · Integrate + tune | Formal user test (SPEC §41) |
 |---|---|---|---|---|
-| Full-time, about 35 h/wk each | 1 day | Weeks 1–2 | Week 3 | Week 4 |
-| Part-time, about 10 h/wk each | 3 days | Weeks 1–4 | Weeks 5–6 | Week 7 |
+| Full-time, about 35 h/wk each | 1 day | Weeks 1–3 | Week 4 | Week 5 |
+| Part-time, about 10 h/wk each | 3 days | Weeks 1–6 | Weeks 7–8 | Week 9 |
 
-Confidence: **medium-high** for the code, **low** for the product bet. The code is small and fully unit-testable in Dart. Whether a person can read it is unknown until §7. Stage 1 ends with the informal three-person checkpoint (§7); the formal SPEC §41 session follows Stage 2.
+Confidence: **medium-high** for the code, **low** for the product bet. The code is small and fully unit-testable in Dart. Whether a person can read it is unknown until §7. Stage 1 ends with the informal three-person checkpoint (§7); the formal SPEC §41 session follows Stage 2. Three developers cover the four lanes: Ian carries App and Input, so Ian is the critical path in Stage 1.
 
 | Stage | What exists, in plain words |
 |---|---|
@@ -38,13 +38,13 @@ Confidence: **medium-high** for the code, **low** for the product bet. The code 
 | Lane | Developer | Owns (folders) | Implements | Skills |
 |---|---|---|---|---|
 | **A — App** | **Ian (Ianodad)** | `lib/app/`, `lib/features/`, `lib/ports/`, `lib/storage/` | Screens, settings storage, integration, demo script. Owns the port definitions and their fakes. | Flutter, state management, the spec |
-| **T — Tactile** | *assign* | `lib/core/braille/`, `lib/core/haptics/`, `lib/core/practice/` | `BraillePort` (encode + decode), `HapticPort` (cells → vibration, confirmation codes), practice-mode logger | Dart, `vibration` plugin, patience for user testing |
-| **I — Input** | *assign* | `lib/core/braille_keyboard/`, `lib/core/gestures/`, `lib/core/quick_reply/` | Six-dot keyboard widget (chords), gesture engine (§9), quick-reply selector | Dart, multi-touch handling, widget tests |
-| **V — Voice + Words** | *assign* | `lib/services/voice/`, `lib/services/simplify/`, `lib/services/launcher/`, `proxy/` | `VoicePort` (Android `speech_to_text` in; ElevenLabs voice out when online via the Worker, `flutter_tts` offline), `SimplifierPort` (Claude reply suggestions via the Worker, rule-based fallback), the Worker itself, `LauncherPort` (stretch) | Dart, plugins, TypeScript for the Worker, prompt and eval work |
+| **T — Tactile** | **Stephane (Kinjuriu)** | `lib/core/braille/`, `lib/core/haptics/`, `lib/core/practice/` | `BraillePort` (encode + decode), `HapticPort` (cells → vibration, confirmation codes), practice-mode logger | Dart, `vibration` plugin, patience for user testing |
+| **I — Input** | **Ian (Ianodad)**, alongside Lane A | `lib/core/braille_keyboard/`, `lib/core/gestures/`, `lib/core/quick_reply/` | Six-dot keyboard widget (chords), gesture engine (§9), quick-reply selector | Dart, multi-touch handling, widget tests |
+| **V — Voice + Words** | **Kevin** | `lib/services/voice/`, `lib/services/simplify/`, `lib/services/launcher/`, `proxy/` | `VoicePort` (Android `speech_to_text` in; ElevenLabs voice out when online via the Worker, `flutter_tts` offline), `SimplifierPort` (Claude reply suggestions via the Worker, rule-based fallback), the Worker itself, `LauncherPort` (stretch) | Dart, plugins, TypeScript for the Worker, prompt and eval work |
 
 **Why by layer.** Four people touch four folders. Merge conflicts only happen in `lib/ports/`, and those are contract PRs that need both lanes. Lane A is the integrator: Ian is the first consumer of every port, so gaps surface in Lane A's PRs early.
 
-**What the demo slice already split.** Today's slice used three lanes (Tactile, Voice, Launcher). The fourth developer takes Input, which the slice folds into Tactile. Splitting keyboard and gestures out of the Braille engine is the natural seam.
+**What the demo slice already split.** Today's slice used three lanes (Tactile, Voice, Launcher). Input is split out of Tactile because keyboard and gestures are a natural seam; Ian carries it alongside App. Ian's Stage 1 load is about 17 developer-days across the two lanes, which is why Stage 1 is three weeks full-time, not two. Order for Ian: I1.2, I1.1, A1.1, A1.2 (on fakes), I1.3, A1.3, A1.4.
 
 ---
 
@@ -235,12 +235,12 @@ Pivot options, ranked: change the cell encoding (D-009), slow Beginner mode furt
 
 ## 9. Kickoff: specs, wireframes, branches
 
-| Lane | Spec | First branch (from `develop`) |
-|---|---|---|
-| A · App | [`WIREFRAMES.md`](WIREFRAMES.md) + this plan §4 | works on `develop` and the demo slice |
-| T · Tactile | [`specs/SPEC-T-tactile.md`](specs/SPEC-T-tactile.md) | `feat/t/T1.1-braille-engine` |
-| I · Input | [`specs/SPEC-I-input.md`](specs/SPEC-I-input.md) | `feat/i/I1.2-gesture-engine` |
-| V · Voice + Words | [`specs/SPEC-V-voice.md`](specs/SPEC-V-voice.md) | `feat/v/V1.1-speech-in` |
+| Lane | Who | Spec | First branch (from `develop`) |
+|---|---|---|---|
+| A · App | Ian | [`WIREFRAMES.md`](WIREFRAMES.md) + this plan §4 | works on `develop` and the demo slice |
+| T · Tactile | Stephane | [`specs/SPEC-T-tactile.md`](specs/SPEC-T-tactile.md) | `feat/t/T1.1-braille-engine` |
+| I · Input | Ian | [`specs/SPEC-I-input.md`](specs/SPEC-I-input.md) | `feat/i/I1.2-gesture-engine` |
+| V · Voice + Words | Kevin | [`specs/SPEC-V-voice.md`](specs/SPEC-V-voice.md) | `feat/v/V1.1-speech-in` |
 
 How we work together, day to day: [`CONTRIBUTING.md`](../CONTRIBUTING.md). `develop` was created from this docs branch; W0.1 merges the demo slice into it.
 

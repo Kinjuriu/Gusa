@@ -1,6 +1,6 @@
 # SPEC V — Voice + Words lane (speech in, speech out, simplifier, Worker)
 
-**Developer:** *assign* · **Branch:** `feat/v/V1.1-speech-in` (first task; then V1.3, W0.5, V1.4, V1.5; V2.2 in Stage 2) · **Reviewer:** Ian
+**Developer:** Kevin · **Branch:** `feat/v/V1.1-speech-in` (first task; then V1.3, W0.5, V1.4, V1.5; V2.2 in Stage 2) · **Reviewer:** Ian
 **Owns:** `lib/services/voice/`, `lib/services/simplify/`, `lib/services/launcher/` (stretch), `proxy/`, `test/services/`, `test/fixtures/sentences_30.json`
 **Reads:** [`TEAM-PLAN.md`](../TEAM-PLAN.md) §3–4, [`DECISIONS.md`](../DECISIONS.md) D-003 D-004 D-006 D-013 D-014 D-015 D-016, [`WIREFRAMES.md`](../WIREFRAMES.md) screen 2, [`SPEC.md`](../SPEC.md) §5, §19–22, §37–38
 
