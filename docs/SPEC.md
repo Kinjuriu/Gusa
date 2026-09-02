@@ -587,6 +587,13 @@ Preferred input
 
 No cloud account required initially.
 
+**MVP authentication: none (D-011, decided 2026-09-02).** The MVP is a demo. There is no
+password, no OTP, no login and no user account — the app opens straight into the
+experience: touch/haptic Braille feedback, speech-to-text, and open-app actions.
+This is separate from the proxy shared-secret in D-006, which protects the API key and is
+not a user credential, and separate from §37 redaction, which strips *other* apps'
+password and OTP text before anything is sent to the AI.
+
 Sensitive information stays on-device.
 
 ---

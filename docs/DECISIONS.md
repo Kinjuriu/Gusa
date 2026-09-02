@@ -14,7 +14,11 @@ One line per decision. Status is OPEN until the owner writes the outcome and the
 | D-008 | **Braille standard.** | English Grade 1, UEB uncontracted. Capital sign and number sign supported. Kiswahili in Phase 2. | Lane T | Week 0 | OPEN |
 | D-009 | **Haptic encoding of a cell.** Dot-by-dot in order 1–6 with present/absent slots, or row-by-row, or long/short pulses. | Start dot-by-dot (simplest to explain). Practice-mode data at the Stage 1 checkpoint decides. | Lane T | Stage 1 checkpoint | OPEN |
 | D-010 | **Go / pivot after Stage 1.** See TEAM-PLAN §8. | Go if ≥70 % character recognition and ≥5 wpm with three testers. | Ian | Stage 1 exit | OPEN |
+| D-011 | **App authentication (user-facing).** Does the MVP have any sign-in at all? | **None. The MVP is a demo: no password, no OTP, no login, no user account.** The app opens straight into the experience — touch/haptic Braille feedback, speech-to-text, and open-app actions. Everything stays on-device. NOT the same as D-006 (proxy shared-secret, which protects the OpenAI key) and NOT the same as SPEC §37 redaction (stripping other apps' password/OTP text before sending to AI). Cloud user accounts stay in the out-of-scope list (SPEC §46). | Ian | — | **DECIDED 2026-09-02** |
 
 ## Log
 
 - 2026-09-02 — D-003 decided by Ian: no ElevenLabs. Voice is Android native only.
+- 2026-09-02 — D-011 decided by Ian: MVP ships with NO user-facing auth. It is a demo —
+  no password, no OTP, no login, no account. App opens straight to touch feedback,
+  speech-to-text and open-app. Does not change D-006 (proxy secret) or §37 redaction.
