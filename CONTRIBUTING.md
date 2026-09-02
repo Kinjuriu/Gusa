@@ -7,11 +7,11 @@ Four people, four machines, one repo. This page is the whole process. If somethi
 | Lane | Person | Spec | Folders |
 |---|---|---|---|
 | A · App and integration | Ian (@Ianodad) | [`docs/WIREFRAMES.md`](docs/WIREFRAMES.md) + [`docs/TEAM-PLAN.md`](docs/TEAM-PLAN.md) §4 | `lib/app/ lib/features/ lib/ports/ lib/storage/` |
-| T · Tactile | *assign* | [`docs/specs/SPEC-T-tactile.md`](docs/specs/SPEC-T-tactile.md) | `lib/core/braille/ lib/core/haptics/ lib/core/practice/` |
-| I · Input | *assign* | [`docs/specs/SPEC-I-input.md`](docs/specs/SPEC-I-input.md) | `lib/core/braille_keyboard/ lib/core/gestures/ lib/core/quick_reply/` |
-| V · Voice + Words | *assign* | [`docs/specs/SPEC-V-voice.md`](docs/specs/SPEC-V-voice.md) | `lib/services/ proxy/` |
+| T · Tactile | Stephane (@Kinjuriu) | [`docs/specs/SPEC-T-tactile.md`](docs/specs/SPEC-T-tactile.md) | `lib/core/braille/ lib/core/haptics/ lib/core/practice/` |
+| I · Input | Ian (@Ianodad) | [`docs/specs/SPEC-I-input.md`](docs/specs/SPEC-I-input.md) | `lib/core/braille_keyboard/ lib/core/gestures/ lib/core/quick_reply/` |
+| V · Voice + Words | Kevin (handle to confirm) | [`docs/specs/SPEC-V-voice.md`](docs/specs/SPEC-V-voice.md) | `lib/services/ proxy/` |
 
-Ian reviews every PR and is the final approver. You never merge your own PR. You never edit another lane's folders; if you need something from them, open an issue tagged with their lane.
+Three people, four lanes: Ian carries App and Input. Ian reviews every PR except his own; Stephane reviews Ian's App and Input PRs. Ian is the final approver on everything else. You never merge your own PR. You never edit another lane's folders; if you need something from them, open an issue tagged with their lane.
 
 ## 2. Your first hour
 
