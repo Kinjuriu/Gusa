@@ -233,7 +233,18 @@ Pivot options, ranked: change the cell encoding (D-009), slow Beginner mode furt
 
 ---
 
-## 9. Deviations from the spec, on purpose
+## 9. Kickoff: specs, wireframes, branches
+
+| Lane | Spec | First branch (from `develop`) |
+|---|---|---|
+| A · App | [`WIREFRAMES.md`](WIREFRAMES.md) + this plan §4 | works on `develop` and the demo slice |
+| T · Tactile | [`specs/SPEC-T-tactile.md`](specs/SPEC-T-tactile.md) | `feat/t/T1.1-braille-engine` |
+| I · Input | [`specs/SPEC-I-input.md`](specs/SPEC-I-input.md) | `feat/i/I1.2-gesture-engine` |
+| V · Voice + Words | [`specs/SPEC-V-voice.md`](specs/SPEC-V-voice.md) | `feat/v/V1.1-speech-in` |
+
+How we work together, day to day: [`CONTRIBUTING.md`](../CONTRIBUTING.md). `develop` was created from this docs branch; W0.1 merges the demo slice into it.
+
+## 10. Deviations from the spec, on purpose
 
 | Spec says | This plan does | Why |
 |---|---|---|

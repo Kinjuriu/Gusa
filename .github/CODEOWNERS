@@ -1,0 +1,14 @@
+# Review routing. Fill in the three lane owners in Week 0 (task W0.2).
+/docs/                          @Ianodad
+/lib/app/                       @Ianodad
+/lib/features/                  @Ianodad
+/lib/storage/                   @Ianodad
+/lib/ports/                     @Ianodad
+# /lib/core/braille/            @tactile-dev
+# /lib/core/haptics/            @tactile-dev
+# /lib/core/practice/           @tactile-dev
+# /lib/core/braille_keyboard/   @input-dev
+# /lib/core/gestures/           @input-dev
+# /lib/core/quick_reply/        @input-dev
+# /lib/services/                @voice-dev
+# /proxy/                       @voice-dev

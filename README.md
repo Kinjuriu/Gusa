@@ -7,3 +7,6 @@ Gusa, meaning “touch” in Swahili, is a local-first Android accessibility ass
 - [4-Developer Plan](docs/TEAM-PLAN.md) — lanes, stages, GitHub workflow, verification
 - [Decisions](docs/DECISIONS.md) — open and closed decisions with defaults
 - [Machine setup](docs/SETUP.md) — get your PC building and your phone connected
+- [Wireframes](docs/WIREFRAMES.md) — the five screens, as touch maps
+- [Lane specs](docs/specs/) — one self-contained spec per developer lane
+- [How we collaborate](CONTRIBUTING.md) — branches, PRs, reviews, rhythm
