@@ -228,8 +228,14 @@ class BrailleEncoder {
       final ch = text[i];
       final lower = ch.toLowerCase();
 
-      if (ch == ' ') {
+      // Whitespace is a word boundary, not a character. Newlines matter here:
+      // the AI simplifier emits multi-line output ("EVENT TOMORROW.\nATTEND?"),
+      // so treating \n as an unknown cell would put a meaningless pulse in the
+      // middle of nearly every real message.
+      if (ch == ' ' || ch == '\n' || ch == '\r' || ch == '\t') {
         inNumberRun = false;
+        // Collapse a run of whitespace (e.g. "\r\n") into ONE word boundary.
+        if (cells.isNotEmpty && cells.last.isSpace) continue;
         cells.add(const BrailleCell.space());
         continue;
       }

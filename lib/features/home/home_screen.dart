@@ -109,6 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     child: _BigButton(
                       label: 'OPEN BY VOICE',
+                      enabled: !c.busy,
                       onTap: () => _tap(c.openByVoice),
                     ),
                   ),
@@ -116,6 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     child: _BigButton(
                       label: 'SPEAK "YES"',
+                      enabled: !c.busy,
                       onTap: () => _tap(() => c.speakReply('Yes')),
                     ),
                   ),
@@ -188,22 +190,31 @@ class _Label extends StatelessWidget {
 }
 
 class _BigButton extends StatelessWidget {
-  const _BigButton({required this.label, required this.onTap, this.primary = false});
+  const _BigButton({
+    required this.label,
+    required this.onTap,
+    this.primary = false,
+    this.enabled = true,
+  });
   final String label;
   final VoidCallback onTap;
   final bool primary;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) => Semantics(
         button: true,
+        enabled: enabled,
         label: label,
-        child: Padding(
+        child: Opacity(
+          opacity: enabled ? 1 : 0.4,
+          child: Padding(
           padding: const EdgeInsets.only(bottom: 8),
           child: Material(
             color: primary ? const Color(0xFFFFD166) : const Color(0xFF22222B),
             borderRadius: BorderRadius.circular(16),
             child: InkWell(
-              onTap: onTap,
+              onTap: enabled ? onTap : null,
               borderRadius: BorderRadius.circular(16),
               child: Container(
                 height: primary ? 96 : 72,
@@ -218,6 +229,7 @@ class _BigButton extends StatelessWidget {
               ),
             ),
           ),
+        ),
         ),
       );
 }

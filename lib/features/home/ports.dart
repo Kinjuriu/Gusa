@@ -25,8 +25,29 @@ abstract class HapticPort {
   Future<void> cancel();
 }
 
+/// Why listening ended without usable speech. SPEC §21: a failure must never be
+/// indistinguishable from silence, so the reason travels with the result.
+enum VoiceFailure {
+  permissionDenied,
+  recognizerUnavailable,
+  noSpeech,
+  timeout,
+  cancelled,
+  error,
+}
+
+class Heard {
+  const Heard.text(String this.text) : failure = null;
+  const Heard.failed(VoiceFailure this.failure) : text = null;
+
+  final String? text;
+  final VoiceFailure? failure;
+
+  bool get ok => text != null && text!.trim().isNotEmpty;
+}
+
 abstract class VoicePort {
-  Future<String?> listenOnce();
+  Future<Heard> listenOnce();
   Future<void> speak(String text);
   Future<void> stop();
 }
@@ -58,5 +79,7 @@ class Resolution {
 abstract class LauncherPort {
   Future<List<LaunchableApp>> installedApps();
   Resolution resolve(String phrase, List<LaunchableApp> apps);
-  Future<void> launch(String package);
+  /// True when the app actually started. A blind-deaf user cannot see that
+  /// nothing happened, so a failed launch must be reportable.
+  Future<bool> launch(String package);
 }

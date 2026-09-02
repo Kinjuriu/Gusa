@@ -48,18 +48,22 @@ class FakeHaptic implements HapticPort {
 }
 
 class FakeVoice implements VoicePort {
-  FakeVoice({List<String>? script})
+  FakeVoice({List<String>? script, this.failWith})
       : _script = script ??
             const ['There is an AI meetup tomorrow. Would you like to attend?'];
   final List<String> _script;
+  final VoiceFailure? failWith;
   int _i = 0;
   final List<String> spoken = [];
 
   @override
-  Future<String?> listenOnce() async {
+  Future<Heard> listenOnce() async {
     await Future<void>.delayed(const Duration(milliseconds: 700));
-    if (_script.isEmpty) return null;
-    return _script[_i++ % _script.length];
+    if (failWith != null) return Heard.failed(failWith!);
+    if (_script.isEmpty) return const Heard.failed(VoiceFailure.noSpeech);
+    final next = _script[_i++ % _script.length];
+    if (next.trim().isEmpty) return const Heard.failed(VoiceFailure.noSpeech);
+    return Heard.text(next);
   }
 
   @override
@@ -122,6 +126,13 @@ class FakeLauncher implements LauncherPort {
     return Resolution(partial, needsConfirmation: partial.isNotEmpty);
   }
 
+  /// Set false to simulate an app that fails to start.
+  bool launchSucceeds = true;
+
   @override
-  Future<void> launch(String package) async => launched.add(package);
+  Future<bool> launch(String package) async {
+    if (!launchSucceeds) return false;
+    launched.add(package);
+    return true;
+  }
 }

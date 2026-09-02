@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gusa/core/braille/braille_encoder.dart';
 
 void main() {
+  _newlineRegressionTests();
   const encoder = BrailleEncoder();
 
   group('BrailleEncoder — letters', () {
@@ -107,6 +108,31 @@ void main() {
 
     test('an empty string encodes to an empty list', () {
       expect(encoder.encode(''), isEmpty);
+    });
+  });
+}
+
+// Regression: the AI simplifier emits multi-line output, so a newline must be a
+// word boundary, not an unknown cell. Repro'd against the SPEC §5 example.
+void _newlineRegressionTests() {
+  group('whitespace handling', () {
+    test('newline is a word boundary, never an unknown cell', () {
+      final cells = const BrailleEncoder().encode('EVENT TOMORROW.\nATTEND?');
+      expect(cells.any((c) => c.isUnknown), isFalse,
+          reason: 'no unknown cells in the spec\'s own example string');
+      expect(cells.where((c) => c.isSpace).length, 2,
+          reason: 'one boundary for the space, one for the newline');
+    });
+
+    test('a whitespace run collapses to a single boundary', () {
+      final cells = const BrailleEncoder().encode('a\r\nb');
+      expect(cells.where((c) => c.isSpace).length, 1);
+      expect(cells.any((c) => c.isUnknown), isFalse);
+    });
+
+    test('tab is a boundary too', () {
+      final cells = const BrailleEncoder().encode('a\tb');
+      expect(cells.any((c) => c.isUnknown), isFalse);
     });
   });
 }

@@ -45,43 +45,59 @@ class RealVoice implements VoicePort {
   final Duration listenTimeout;
   bool _ready = false;
 
+  /// The in-flight listen, so stop() can resolve it instead of leaving it
+  /// parked until the timeout fires and overwrites the screen later.
+  Completer<Heard>? _active;
+
   Future<void> _ensureReady() async {
     if (_ready) return;
     _ready = await _provider.initialize();
   }
 
-  /// Listens until the recogniser returns a final result, then stops.
-  /// Returns null on timeout, permission denial or an unavailable recogniser —
-  /// the caller reports that rather than treating it as silence.
+  /// Listens until the recogniser returns a final result, then stops. Every
+  /// non-result outcome carries its own reason (SPEC §21) so the caller can
+  /// tell a denied microphone apart from actual silence.
   @override
-  Future<String?> listenOnce() async {
+  Future<Heard> listenOnce() async {
     await _ensureReady();
-    if (!_ready) return null;
+    if (!_ready) return const Heard.failed(VoiceFailure.recognizerUnavailable);
 
-    final done = Completer<String?>();
+    final done = Completer<Heard>();
+    _active = done;
     late StreamSubscription<vp.SpeechResult> results;
     late StreamSubscription<vp.ListeningState> states;
 
-    void finish(String? value) {
+    void finish(Heard value) {
       if (!done.isCompleted) done.complete(value);
     }
 
     results = _provider.speechResults.listen((r) {
-      if (r.isFinal && r.text.trim().isNotEmpty) finish(r.text);
+      if (r.isFinal && r.text.trim().isNotEmpty) finish(Heard.text(r.text));
     });
     states = _provider.listeningStateStream.listen((s) {
-      if (s == vp.ListeningState.permissionDenied ||
-          s == vp.ListeningState.recognizerUnavailable ||
-          s == vp.ListeningState.noSpeechDetected ||
-          s == vp.ListeningState.error) {
-        finish(null);
+      switch (s) {
+        case vp.ListeningState.permissionDenied:
+          finish(const Heard.failed(VoiceFailure.permissionDenied));
+        case vp.ListeningState.recognizerUnavailable:
+          finish(const Heard.failed(VoiceFailure.recognizerUnavailable));
+        case vp.ListeningState.noSpeechDetected:
+          finish(const Heard.failed(VoiceFailure.noSpeech));
+        case vp.ListeningState.error:
+          finish(const Heard.failed(VoiceFailure.error));
+        case vp.ListeningState.listening:
+        case vp.ListeningState.notListening:
+          break;
       }
     });
 
     try {
       await _provider.startListening();
-      return await done.future.timeout(listenTimeout, onTimeout: () => null);
+      return await done.future.timeout(
+        listenTimeout,
+        onTimeout: () => const Heard.failed(VoiceFailure.timeout),
+      );
     } finally {
+      _active = null;
       await results.cancel();
       await states.cancel();
       await _provider.stopListening();
@@ -96,6 +112,12 @@ class RealVoice implements VoicePort {
 
   @override
   Future<void> stop() async {
+    // Resolve the parked listen first, so it cannot surface an error banner
+    // seconds after the user pressed Stop.
+    final active = _active;
+    if (active != null && !active.isCompleted) {
+      active.complete(const Heard.failed(VoiceFailure.cancelled));
+    }
     await _provider.stopListening();
     await _provider.stopSpeaking();
   }
@@ -134,5 +156,5 @@ class RealLauncher implements LauncherPort {
   }
 
   @override
-  Future<void> launch(String package) => _launcher.launchApp(package);
+  Future<bool> launch(String package) => _launcher.launchApp(package);
 }

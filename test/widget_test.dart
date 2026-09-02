@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gusa/features/home/fake_ports.dart';
 import 'package:gusa/features/home/home_controller.dart';
+import 'package:gusa/features/home/ports.dart';
 import 'package:gusa/features/home/home_screen.dart';
 
 HomeController buildController({FakeVoice? voice, FakeLauncher? launcher}) =>
@@ -102,5 +103,48 @@ void main() {
     await c.listenAndFeel();
     expect(c.phase, Phase.error);
     expect(c.message, contains('Nothing heard'));
+  });
+
+  // SPEC 21: a failure must never be indistinguishable from silence.
+  test('each voice failure gets its own message, not "Nothing heard"', () async {
+    final cases = {
+      VoiceFailure.permissionDenied: 'Microphone permission denied',
+      VoiceFailure.recognizerUnavailable: 'Speech recogniser unavailable',
+      VoiceFailure.timeout: 'Timed out before any speech',
+      VoiceFailure.error: 'Voice failed',
+    };
+    for (final entry in cases.entries) {
+      final c = buildController(voice: FakeVoice(failWith: entry.key));
+      await c.listenAndFeel();
+      expect(c.phase, Phase.error, reason: '${entry.key}');
+      expect(c.message, entry.value, reason: '${entry.key}');
+    }
+  });
+
+  test('a cancelled listen is not an error', () async {
+    final c = buildController(
+        voice: FakeVoice(failWith: VoiceFailure.cancelled));
+    await c.listenAndFeel();
+    expect(c.phase, Phase.idle);
+  });
+
+  test('a failed app launch is reported, never as success', () async {
+    final launcher = FakeLauncher()..launchSucceeds = false;
+    final c = buildController(launcher: launcher);
+    await c.loadApps();
+    await c.openApp(const LaunchableApp('WhatsApp', 'com.whatsapp'));
+
+    expect(c.phase, Phase.error);
+    expect(c.message, contains('Could not open'));
+  });
+
+  test('a second voice operation cannot start while one is live', () async {
+    final c = buildController();
+    final first = c.listenAndFeel();
+    // Same shared recogniser session — the second call must be refused.
+    await c.openByVoice();
+    expect(c.heard, isEmpty, reason: 'second op must not have run');
+    await first;
+    expect(c.heard, isNotEmpty);
   });
 }
