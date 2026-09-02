@@ -10,7 +10,7 @@ Run once per developer. When all four PCs pass `scripts/doctor.sh` and all four 
 | Android Studio | latest stable | Install SDK Platform 35 and 36, Build-Tools 35.0.0 or newer, Platform-Tools |
 | JDK | 17 | You will not write Kotlin. Gradle still needs a JDK to build the APK. |
 | GitHub CLI | latest | `gh auth login` |
-| Node + Wrangler | only if `GUSA_AI=on` | Lane V only, and only if the AI flag is ever turned on |
+| Node 20+ and Wrangler | latest | Lane V builds and deploys the Worker. Others need it only to run `wrangler dev` locally. |
 
 ## 2. A physical Android phone
 
@@ -28,7 +28,8 @@ cd gusa
 git checkout develop
 flutter pub get
 flutter run --dart-define=GUSA_USE_FAKES=true     # loop runs on fakes, no permissions needed
-flutter run                                         # real ports: asks for microphone
+cp .env.example .env.json                           # GUSA_PROXY_URL and GUSA_PROXY_SECRET from Lane V
+flutter run --dart-define-from-file=.env.json      # real ports: asks for microphone, calls the Worker
 ```
 
 ## 4. Flags
@@ -36,7 +37,7 @@ flutter run                                         # real ports: asks for micro
 | Flag | Default | Effect |
 |---|---|---|
 | `GUSA_USE_FAKES` | `false` | Every port is a fake. Braille cells print to the log, haptics log timings, voice returns canned text. |
-| `GUSA_AI` | `off` | `on` switches the simplifier to the OpenAI-backed one via the proxy. Needs `GUSA_PROXY_URL` and `GUSA_PROXY_SECRET` in `.env.json`. |
+| `GUSA_AI` | `on` | `off` forces the rule-based shortener and generic replies. Use it for a demo with no network. `on` needs `GUSA_PROXY_URL` and `GUSA_PROXY_SECRET` in `.env.json`. |
 
 ## 5. Check everything
 
