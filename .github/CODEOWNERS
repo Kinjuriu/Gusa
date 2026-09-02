@@ -10,6 +10,5 @@
 /lib/core/braille_keyboard/     @Ianodad
 /lib/core/gestures/             @Ianodad
 /lib/core/quick_reply/          @Ianodad
-# Kevin owns Voice + Words. Uncomment once his GitHub handle is confirmed and he is a collaborator.
-# /lib/services/                @kevin
-# /proxy/                       @kevin
+/lib/services/                  @future-centaur
+/proxy/                         @future-centaur
