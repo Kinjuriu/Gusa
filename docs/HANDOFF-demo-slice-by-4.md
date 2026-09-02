@@ -1,7 +1,7 @@
 # HANDOFF — Gusa demo slice ("done by 4")
 
-Branch: `spec/demo-slice-by-4`   Parent: `docs/team-plan`   Status: IN PROGRESS — integrated, awaiting a phone
-Owner: Ian (orchestrated by Claude)   Updated: 2026-09-02 14:15 EAT
+Branch: `spec/demo-slice-by-4`   Parent: `docs/team-plan`   Status: MERGED into docs/team-plan (659572b) — awaiting a phone
+Owner: Ian (orchestrated by Claude)   Updated: 2026-09-02 15:10 EAT
 
 ## What this spec is doing
 
@@ -54,6 +54,26 @@ physical Android phone and walking Journey A on it.
   implementation, so the demo runs offline. A hanging network call would kill a demo.
 - **Ambiguity is reportable, not guessed.** `AppResolver` returns a ranked list with a
   confidence signal — a blind-deaf user cannot see that the wrong app opened.
+
+## Reconcile with the team's v2 plan (docs/specs/) — NOT yet done
+
+While this slice was being built, `docs/team-plan` advanced 4 commits: a v2 replan
+("narrow MVP to the communication loop, Flutter only, minimal AI"), D-012…D-016, and
+three lane specs. The merge was clean (they touched only docs + .github, no code) and
+the architectures CONVERGED INDEPENDENTLY — `docs/specs/` names the same ports this
+slice already implements: `Cell`, `BraillePort`, `HapticPort`, `VoicePort`,
+`SimplifierPort`. Two real deltas remain:
+
+1. **`SimplifierPort` return type.** `SPEC-V-voice.md` wants
+   `Future<SimplifiedMessage> simplify(...)` with `{short, replies, fromAi}` — reply
+   suggestions per D-016. This slice returns a bare `String`. Widening it is small:
+   the adapter in `lib/features/home/real_ports.dart` is the only caller.
+2. **The Input lane does not exist.** `SPEC-I-input.md` (six-dot Braille keyboard +
+   gestures) is how the user TYPES a reply — the second half of Journey A (SPEC §6).
+   This slice can only render Braille OUT, not take it IN; the demo's "user
+   Braille-types YES" step is done by pressing SPEAK "YES".
+   The `LauncherPort` built here (open an app by tap or voice) is not in their plan at
+   all — it came from Ian's "always on, tap or speech to access app or feature".
 
 ## Open flags / risks
 - 🔴 **NO ANDROID PHONE IS CONNECTED.** `adb devices` is empty. Haptics do not exist on
